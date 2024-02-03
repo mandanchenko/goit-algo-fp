@@ -71,6 +71,7 @@ class LinkedList:
             print(current.data)
             current = current.next
 
+    # пункт 1 - реверсування списку
     def reverse_list(self):
         prev = None
         current = self.head
@@ -81,6 +82,7 @@ class LinkedList:
             current = next_node
         self.head = prev
 
+    # пункт 2 - сортування вставками однозв'язного списку
     def insertion_sort(self):
         if self.head is None or self.head.next is None:
             return
@@ -112,6 +114,34 @@ class LinkedList:
         return sorted_head
 
 
+# пункт 3 - об'єднання 2х відсортованих списків в один відсортований список.
+def merge_sorted_lists(list1, list2):
+    merged_list = LinkedList()
+    merged_head = Node()
+    merged_current = merged_head
+
+    current1 = list1.head
+    current2 = list2.head
+
+    while current1 or current2:
+        if not current1:
+            merged_current.next = current2
+            break
+        elif not current2:
+            merged_current.next = current1
+            break
+        elif current1.data <= current2.data:
+            merged_current.next = Node(current1.data)
+            current1 = current1.next
+        else:
+            merged_current.next = Node(current2.data)
+            current2 = current2.next
+
+        merged_current = merged_current.next
+
+    merged_list.head = merged_head.next
+    return merged_list
+
 
 if __name__ == "__main__":
     llist = LinkedList()
@@ -134,4 +164,21 @@ if __name__ == "__main__":
     print("Відсортований список:")
     llist.insertion_sort()
     llist.print_list()
-    
+
+    # Створюємо другий список
+    llist2 = LinkedList()
+
+    # Вставляємо вузли в початок
+    llist2.insert_at_beginning(15)
+    llist2.insert_at_beginning(1)
+    llist2.insert_at_beginning(5)
+
+    # Сортуєм другий список
+    print("Відсортований список:")
+    llist2.insertion_sort()
+    llist2.print_list()
+
+    # Виводим об'єднаний відсортований список.
+    print("Об'єднаний відсортований список.:")
+    new_list = merge_sorted_lists(llist, llist2)
+    new_list.print_list()
