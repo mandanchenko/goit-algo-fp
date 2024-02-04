@@ -14,14 +14,14 @@ for _ in range(nums):
     counts[dices] += 1
 
 probabilities = {key: count / nums for key, count in counts.items()}
-# відсортувати за значенням ключа
-sorted_counts = dict(sorted(probabilities.items()))
-
-print(sorted_counts)
 print(probabilities)
+
+# відсортовуємо словник з вірогідностями за ключем для виведення впорядкованої таблиці
+sorted_probabilities = dict(sorted(probabilities.items()))
+
 print("Dice | Probability")
 print("-----|------------")
-for dice, prob in probabilities.items():
+for dice, prob in sorted_probabilities.items():
     print(f"{dice: <4} | {prob:.2%}")
 
 
