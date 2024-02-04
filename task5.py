@@ -3,6 +3,9 @@ import uuid
 import networkx as nx
 import matplotlib.pyplot as plt
 
+from collections import deque
+
+
 class Node:
     def __init__(self, key, color="#9696F0"):
         self.left = None
@@ -14,7 +17,7 @@ class Node:
     def darken_color(self, n):
         # Ваша функція darken_color. Використовуйте значення n для чогось.
         r, g, b = int(self.color[1:3], 16), int(self.color[3:5], 16), int(self.color[5:7], 16)
-        r, g, b = int(r - n), int(g - n), int(b - n)
+        r, g, b = int(r// n), int(g // n), int(b // n)
         self.color = f'#{r:02X}{g:02X}{b:02X}'
         print(self.val, f'#{r:02X}{g:02X}{b:02X}')
 
@@ -25,7 +28,7 @@ def dfs_traversal_with_darken(node, n=1):
         node.darken_color(n)
 
         # Збільште значення n для наступного вузла
-        n += 5
+        n += 0.3
 
         # Виконайте обхід для лівого піддерева
         n = dfs_traversal_with_darken(node.left, n)
@@ -79,6 +82,29 @@ def dfs_traversal(node, n = 1):
 
     return n
 
+def bfs_traversal_with_darken(root):
+    if root is None:
+        return
+
+    # Ініціалізація черги та початкового значення n
+    queue = deque([root])
+    n = 1
+
+    while queue:
+        # Отримання та видалення першого елемента з черги
+        current_node = queue.popleft()
+
+        # Виклик методу darken_color для поточного вузла
+        current_node.darken_color(n)
+
+        # Збільште значення n для наступного вузла
+        n += 0.3
+
+        # Додавання дітей поточного вузла до черги (якщо вони існують)
+        if current_node.left:
+            queue.append(current_node.left)
+        if current_node.right:
+            queue.append(current_node.right)
 
 if __name__ == "__main__":
     # Створення дерева
@@ -92,5 +118,5 @@ if __name__ == "__main__":
     # Відображення дерева
     #
     dfs_traversal(root)
-    dfs_traversal_with_darken(root)
+    bfs_traversal_with_darken(root)
     draw_tree(root)
