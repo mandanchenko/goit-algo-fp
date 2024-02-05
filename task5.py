@@ -7,22 +7,22 @@ from collections import deque
 
 
 class Node:
-    def __init__(self, key, color="#9696F0"):
+    def __init__(self, key, color="#3C3C60"):
         self.left = None
         self.right = None
         self.val = key
         self.color = color  # Додатковий аргумент для зберігання кольору вузла
         self.id = str(uuid.uuid4())  # Унікальний ідентифікатор для кожного вузла
 
-    def darken_color(self, n):
-        # Ваша функція darken_color. Використовуйте значення n для чогось.
+    def change_color(self, n):
         r, g, b = (
             int(self.color[1:3], 16),
             int(self.color[3:5], 16),
             int(self.color[5:7], 16),
         )
-        r, g, b = int(r // n), int(g // n), int(b // n)
+        r, g, b = min(int(r + n), 255), min(int(g + n), 255), min(int(b + n), 255)
         self.color = f"#{r:02X}{g:02X}{b:02X}"
+        print(self.val, self.color)
 
 
 def add_edges(graph, node, pos, x=0, y=0, layer=1):
@@ -67,7 +67,7 @@ def draw_tree(tree_root):
 
 
 # Повернення всім нодам дефолтного коліру
-def set_all_nodes_color(root, color="#9696F0"):
+def set_all_nodes_color(root, color="#3C3C60"):
     if root is not None:
         # Встановлення коліру для поточного вузла
         root.color = color
@@ -79,8 +79,8 @@ def set_all_nodes_color(root, color="#9696F0"):
         set_all_nodes_color(root.right, color)
 
 
-# Функція, яка змінює колір згідно обходу вширину
-def bfs_traversal_with_darken(root):
+# Функція, яка змінює колір згідно обходу в ширину
+def bfs_traversal_with_color(root, step=10):
     if root is None:
         return
 
@@ -93,10 +93,10 @@ def bfs_traversal_with_darken(root):
         current_node = queue.popleft()
 
         # Виклик методу darken_color для поточного вузла
-        current_node.darken_color(n)
+        current_node.change_color(n)
 
         # Збільште значення n для наступного вузла
-        n += 0.3
+        n += step
 
         # Додавання дітей поточного вузла до черги (якщо вони існують)
         if current_node.left:
@@ -106,19 +106,19 @@ def bfs_traversal_with_darken(root):
 
 
 # Функція, яка змінює колір згідно обходу в глибину
-def dfs_traversal_with_darken(node, n=1):
+def dfs_traversal_with_color(node, step=10, n=1):
     if node is not None:
         # Виклик методу darken_color для поточного вузла
-        node.darken_color(n)
+        node.change_color(n)
 
         # Збільште значення n для наступного вузла
-        n += 0.3
+        n += step
 
         # Виконайте обхід для лівого піддерева
-        n = dfs_traversal_with_darken(node.left, n)
+        n = dfs_traversal_with_color(node.left, step, n)
 
         # Виконайте обхід для правого піддерева
-        n = dfs_traversal_with_darken(node.right, n)
+        n = dfs_traversal_with_color(node.right, step, n)
 
     return n
 
@@ -132,13 +132,13 @@ if __name__ == "__main__":
     root.right = Node(1)
     root.right.left = Node(3)
 
-    # Робимо обход в глибину
-    bfs_traversal_with_darken(root)
+    # Робимо обход в ширину
+    bfs_traversal_with_color(root, 12)
     # Малюємо дерево
     draw_tree(root)
     # Повертаємо дефолтні значення
     set_all_nodes_color(root)
-    # Робимо обход в ширину
-    dfs_traversal_with_darken(root)
+    # Робимо обход в глибину
+    dfs_traversal_with_color(root, 15)
     # Малюємо дерево
     draw_tree(root)
