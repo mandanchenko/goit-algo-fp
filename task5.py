@@ -22,7 +22,6 @@ class Node:
         )
         r, g, b = min(int(r + n), 255), min(int(g + n), 255), min(int(b + n), 255)
         self.color = f"#{r:02X}{g:02X}{b:02X}"
-        print(self.val, self.color)
 
 
 def add_edges(graph, node, pos, x=0, y=0, layer=1):

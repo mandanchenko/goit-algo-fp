@@ -3,7 +3,9 @@ def greedy_algorithm(items, budget):
     selected_items = []
 
     # Сортуємо страви за співвідношенням калорій до вартості у спадаючому порядку
-    sorted_items = sorted(items.items(), key=lambda x: x[1]["calories"] / x[1]["cost"], reverse=True)
+    sorted_items = sorted(
+        items.items(), key=lambda x: x[1]["calories"] / x[1]["cost"], reverse=True
+    )
 
     # Обираємо страви жадібно
     total_cost = 0
@@ -18,7 +20,7 @@ def greedy_algorithm(items, budget):
     result = {
         "selected_items": selected_items,
         "total_cost": total_cost,
-        "total_calories": total_calories
+        "total_calories": total_calories,
     }
 
     return result
@@ -36,7 +38,9 @@ def dynamic_programming(items, budget):
 
             # Обчислюємо максимальну калорійність для даного бюджету
             if cost <= w:
-                dp_matrix[i][w] = max(dp_matrix[i - 1][w], dp_matrix[i - 1][w - cost] + calories)
+                dp_matrix[i][w] = max(
+                    dp_matrix[i - 1][w], dp_matrix[i - 1][w - cost] + calories
+                )
             else:
                 dp_matrix[i][w] = dp_matrix[i - 1][w]
 
@@ -53,10 +57,11 @@ def dynamic_programming(items, budget):
     result = {
         "selected_items": selected_items,
         "total_cost": sum(items[item]["cost"] for item in selected_items),
-        "total_calories": dp_matrix[len(items)][budget]
+        "total_calories": dp_matrix[len(items)][budget],
     }
 
     return result
+
 
 if __name__ == "__main__":
     # Наявні страви
@@ -66,7 +71,7 @@ if __name__ == "__main__":
         "hot-dog": {"cost": 30, "calories": 200},
         "pepsi": {"cost": 10, "calories": 100},
         "cola": {"cost": 15, "calories": 220},
-        "potato": {"cost": 25, "calories": 350}
+        "potato": {"cost": 25, "calories": 350},
     }
     # Заданий бюджет
     budget = 100
@@ -88,4 +93,3 @@ if __name__ == "__main__":
     print("Обрані страви:", result_dp["selected_items"])
     print("Загальна ватрість:", result_dp["total_cost"])
     print("Загальні калорії:", result_dp["total_calories"])
-
